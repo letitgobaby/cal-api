@@ -4,7 +4,7 @@
   "description": "Calendar API",
   "main": "index.js",
   "scripts": {
-    "tt": "node ./src/index.js",
+    "tt": "node ./example/example.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
@@ -18,8 +18,6 @@
   },
   "homepage": "https://github.com/letitgobaby/cal-api#readme",
   "dependencies": {
-    "dayjs": "^1.10.6",
-    "moment": "^2.29.1",
-    "moment-lunar": "0.0.4"
+    "dayjs": "^1.10.6"
   }
 }
