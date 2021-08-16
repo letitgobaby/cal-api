@@ -1,23 +1,23 @@
 {
   "name": "cal-api",
-  "version": "1.0.0",
+  "version": "0.0.1",
   "description": "Calendar API",
-  "main": "index.js",
+  "main": "./src/index.js",
   "scripts": {
-    "tt": "node ./example/example.js",
+    "start": "node ./example/example.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/letitgobaby/cal-api.git"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "letitgobaby",
+  "license": "MIT",
   "bugs": {
     "url": "https://github.com/letitgobaby/cal-api/issues"
   },
   "homepage": "https://github.com/letitgobaby/cal-api#readme",
   "dependencies": {
-    "dayjs": "^1.10.6"
+    "dayjs": "1.10.6"
   }
 }
