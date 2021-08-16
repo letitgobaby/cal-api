@@ -3,11 +3,14 @@ require("./dayjs-lunar");
 
 
 class CalAPI {
-  constructor(holidayList) {
-    this.holidayList = holidayList;
+  constructor(config) {
+    this.holidayList = config.holidayList;
+    this.lunar = config.lunar;
   }
 
-  yearCalendar(year) {
+  yearCalendar(
+    year = new Date().getUTCFullYear()
+  ) {
     var result = [];
     for (var i = 1; i < 13; i++) {
       result.push(this.monthCalendar(year, i));
@@ -16,7 +19,10 @@ class CalAPI {
     return result;
   }
 
-  monthCalendar(year, month) {
+  monthCalendar(
+    year = new Date().getUTCFullYear(), 
+    month = new Date().getUTCMonth()
+  ) {
     var dObj = dayjs([year, month]);
     if (!dObj.isValid()) {
       return null;
@@ -131,7 +137,9 @@ class CalAPI {
     return tempDateObject.isSame(hDate);
   }
 
-  yearHoliday(year) {
+  yearHoliday(
+    year = new Date().getUTCFullYear()
+  ) {
     var result = [];
     var hList = this.holidayList;
     for (var i = 0; i < hList.length; i++) {
