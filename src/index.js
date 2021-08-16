@@ -2,13 +2,12 @@ var dayjs = require("dayjs");
 require("./dayjs-lunar");
 
 
-
-class Calendar {
+class CalAPI {
   constructor(holidayList) {
     this.holidayList = holidayList;
   }
 
-  yearCalendar(year, hList) {
+  yearCalendar(year) {
     var result = [];
     for (var i = 1; i < 13; i++) {
       result.push(this.monthCalendar(year, i));
@@ -108,16 +107,28 @@ class Calendar {
   }
 
   checkHoliday(holiday, dObj) {
-    var obj = dObj;
-    if (holiday.isLunar) {
-      obj = dObj.lunar();
+    var tempDateObject = dObj;
+
+    if (holiday.bufferDay) {
+      var prevDate = tempDateObject.subtract(1, "days");
+      var nextDate = tempDateObject.add(1, "days");
+      if (this.matchHoliday(holiday, prevDate)) {
+        return true;
+      } else if (this.matchHoliday(holiday, nextDate)) {
+        return true;
+      } 
     }
 
-    if (holiday.month === (obj.month() + 1) 
-      && holiday.date === obj.date()) {
-      return true;
+    return this.matchHoliday(holiday, tempDateObject);
+  }
+
+  matchHoliday(holiday, dObj) {
+    var tempDateObject = dObj;
+    var hDate = dayjs([dObj.year(), holiday.month, holiday.date]);
+    if (holiday.isLunar) {
+      tempDateObject = tempDateObject.lunar();
     }
-    return false;
+    return tempDateObject.isSame(hDate);
   }
 
   yearHoliday(year) {
@@ -157,4 +168,4 @@ class Calendar {
 }
 
 
-module.exports = Calendar;
+module.exports = CalAPI;
