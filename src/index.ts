@@ -21,6 +21,11 @@ interface ConfigType {
   lunar: boolean;
 }
 
+const defaults: ConfigType = {
+  holidayList: [],
+  lunar: false
+};
+
 interface DateObjectType {
   year: number;
   month: number;
@@ -33,12 +38,11 @@ interface DateObjectType {
 
 
 class CalAPI {
-  readonly holidayList: Array<HolidayType>;
-  readonly lunar: Boolean;
+
+  private config: ConfigType;
 
   constructor(config: ConfigType) {
-    this.holidayList = config.holidayList;
-    this.lunar = config.lunar;
+    this.config = Object.assign({}, defaults, config);
   }
 
   yearCalendar(
@@ -56,7 +60,6 @@ class CalAPI {
     year: number = new Date().getUTCFullYear(), 
     month: number = new Date().getUTCMonth()
   ) {
-    // var dObj: dayjs.Dayjs = dayjs([year, month]);
     var dObj: dayjs.Dayjs = dayjs(new Date(year, month - 1));
     if (!dObj.isValid()) {
       return null;
@@ -90,7 +93,7 @@ class CalAPI {
     return mArr;
   }
 
-  getFirstList(dObj: dayjs.Dayjs, fDay: number) {
+  private getFirstList(dObj: dayjs.Dayjs, fDay: number) {
     var result = [];
     var pDate = dObj.subtract(1, 'month');
     for (var i = 0; i < fDay; i++) {
@@ -110,7 +113,7 @@ class CalAPI {
     return result.sort();
   }
 
-  getLastList(date: dayjs.Dayjs) {
+  private getLastList(date: dayjs.Dayjs) {
     var result = [],
         dObj = date.add(1, 'month'),
         firstDayOfNextDate = dObj.startOf('month').day();
@@ -124,7 +127,7 @@ class CalAPI {
     return result;
   }
 
-  buildDateObject(dObj: dayjs.Dayjs, date: number, dayOfWeek: number): DateObjectType {
+  private buildDateObject(dObj: dayjs.Dayjs, date: number, dayOfWeek: number): DateObjectType {
     var obj = {
       year: dObj.year(),
       month: dObj.month() + 1,
@@ -136,20 +139,21 @@ class CalAPI {
     }
 
     var tempObj = dayjs(new Date(obj.year, obj.month - 1, obj.date));
-    for (var i = 0; i < this.holidayList.length; i++) {
-      if (this.checkHoliday(this.holidayList[i], tempObj)) {
-        obj.holidayName = this.holidayList[i].dateName; 
+    obj.fullDate = tempObj.format("YYYYMMDD");
+
+    if (this.config.lunar) obj.lunarDate = tempObj.lunar().format("YYYYMMDD");
+
+    for (var i = 0; i < this.config.holidayList.length; i++) {
+      if (this.checkHoliday(this.config.holidayList[i], tempObj)) {
+        obj.holidayName = this.config.holidayList[i].dateName; 
         break;
       }
     }
 
-    obj.fullDate = tempObj.format("YYYYMMDD");
-    obj.lunarDate = tempObj.lunar().format("YYYYMMDD");
-
     return obj;
   }
 
-  checkHoliday(holiday: HolidayType, dObj: dayjs.Dayjs) {
+  private checkHoliday(holiday: HolidayType, dObj: dayjs.Dayjs) {
     var tempDateObject = dObj;
 
     if (holiday.bufferDay) {
@@ -165,7 +169,7 @@ class CalAPI {
     return this.matchHoliday(holiday, tempDateObject);
   }
 
-  matchHoliday(holiday: HolidayType, dObj: dayjs.Dayjs) {
+  private matchHoliday(holiday: HolidayType, dObj: dayjs.Dayjs) {
     var tempDateObject = dObj;
     var hDate = dayjs(new Date(dObj.year(), holiday.month - 1, holiday.date));
     if (holiday.isLunar) {
@@ -178,7 +182,7 @@ class CalAPI {
     year = new Date().getUTCFullYear()
   ) {
     var result = [];
-    var hList = this.holidayList;
+    var hList = this.config.holidayList;
     for (var i = 0; i < hList.length; i++) {
       var dObj = dayjs(new Date(year, hList[i].month - 1, hList[i].date));
   
@@ -200,7 +204,7 @@ class CalAPI {
     return result;
   }
   
-  buildHolidayObject(dObj: dayjs.Dayjs, holiday: HolidayType) {
+  private buildHolidayObject(dObj: dayjs.Dayjs, holiday: HolidayType) {
     return {
       year: dObj.year(),
       month: dObj.month() + 1,
