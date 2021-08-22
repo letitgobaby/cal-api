@@ -82,10 +82,14 @@ var tempHoliday = [
   },
 ];
 
-var cal = new CalAPI({
-  holidayList: tempHoliday,
-  lunar: true
-});
+// var cal = new CalAPI({
+//   holidayList: tempHoliday,
+//   lunar: true,
+//   holiday: false
+// });
+
+
+var cal = new CalAPI();
 
 console.time("year");
 // for (var i = 0; i < 12*50; i++) {
