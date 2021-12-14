@@ -8,7 +8,7 @@ declare module "dayjs" {
   }
 }
 
-interface HolidayType {
+type HolidayType = {
   dateName: string;
   month: number;
   date: number;
@@ -16,17 +16,12 @@ interface HolidayType {
   bufferDay: boolean;
 }
 
-interface ConfigType {
+type ConfigType = {
   holidayList: Array<HolidayType>;
   lunar: boolean;
 }
 
-const defaults: ConfigType = {
-  holidayList: [],
-  lunar: false
-};
-
-interface DateObjectType {
+type DateObjectType = {
   year: number;
   month: number;
   date: number,
@@ -36,6 +31,10 @@ interface DateObjectType {
   lunarDate: string; 
 }
 
+const defaults: ConfigType = {
+  holidayList: [],
+  lunar: false
+};
 
 class CalAPI {
 
@@ -218,3 +217,4 @@ class CalAPI {
 
 
 export = CalAPI;
+
